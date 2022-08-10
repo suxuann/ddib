@@ -17,6 +17,7 @@ from guided_diffusion.script_util import (
 )
 
 # TODO Change the code and data folders to your own path, e.g. "/users/xxx/ddib"
+# Data folder is not needed for the synthetic experiments.
 CODE_FOLDER = "ddib"
 DATA_FOLDER = "ddib_datasets"
 

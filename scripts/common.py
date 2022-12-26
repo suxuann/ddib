@@ -1,6 +1,6 @@
-import enum
-import numpy as np
 import os
+
+import numpy as np
 import torch as th
 import torch.distributed as dist
 from skimage import io
@@ -16,9 +16,7 @@ from guided_diffusion.script_util import (
     args_to_dict,
 )
 
-# TODO Change the code and data folders to your own path, e.g. "/users/xxx/ddib"
-# Data folder is not needed for the synthetic experiments.
-CODE_FOLDER = "ddib"
+# TODO Data folder is not needed for the synthetic experiments.
 DATA_FOLDER = "ddib_datasets"
 
 
@@ -27,7 +25,7 @@ def get_code_and_dataset_folders():
     This is a utility function for the experiments.
     Returns paths to the folders for the code repository and the data.
     """
-    return CODE_FOLDER, DATA_FOLDER
+    return os.getcwd(), DATA_FOLDER
 
 
 def get_latest_model_path_in_directory(directory):

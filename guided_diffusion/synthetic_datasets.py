@@ -159,7 +159,7 @@ class SquareSampler(BaseSampler):
             py += [py0, py1, py2, py3]
         px = np.concatenate(px)
         py = np.concatenate(py)
-        indices = np.concatenate(indices).astype(np.long)
+        indices = np.concatenate(indices).astype(int)
 
         # Then, assign the points randomly to the squares
         radii_eps = (np.random.rand(N) - .5) * self.width

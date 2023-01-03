@@ -1,7 +1,9 @@
-import blobfile as bf
 import math
-import numpy as np
+import os
 import random
+
+import blobfile as bf
+import numpy as np
 from PIL import Image
 from mpi4py import MPI
 from torch.utils.data import DataLoader, Dataset
@@ -72,43 +74,32 @@ def load_data(
 
 def load_source_data_for_domain_translation(
         *,
-        data_dir,
         batch_size,
         image_size,
-        label,
-        class_cond=False,
-        in_channels=3,
-        file_filter=None,
-        retain_zero_class=False
+        data_dir="./experiments/imagenet",
+        in_channels=3
 ):
     """
-    New in DDIBs: Loads the source dataset for domain translation.
+    This function is new in DDIBs: loads the source dataset for translation.
     For the dataset, create a generator over (images, kwargs) pairs.
+    No image cropping, flipping or shuffling.
 
-    :param data_dir: a dataset directory.
-    :param batch_size: the batch size of each returned pair. Defaults to 1.
+    :param batch_size: the batch size of each returned pair.
     :param image_size: the size to which images are resized.
     :param label: include a "y" key in returned dicts for class label.
-    :param file_filter: a filter to apply on all_files if not None
     """
     if not data_dir:
         raise ValueError("unspecified data directory")
-    all_files = list_image_files(data_dir, retain_zero_class=retain_zero_class)
-    if file_filter is not None:
-        all_files = [x for x in all_files if file_filter(x)]
-    classes = [label for _ in all_files]  # TODO This may have bugs
-    if class_cond:
-        # Assume classes are the first part of the filename,
-        # before an underscore.
-        class_names = [bf.basename(path).split("_")[0] for path in all_files]
-        sorted_classes = {x: i for i, x in enumerate(sorted(set(class_names)))}
-        classes = [sorted_classes[x] for x in class_names]
+    all_files = [f for f in list_image_files(data_dir) if "translated" not in f]
+    # Classes are the first part of the filename, before an underscore: e.g. "291_1.png"
+    classes = [int(bf.basename(path).split("_")[0]) for path in all_files]
     dataset = ImageDataset(
         image_size,
         all_files,
         in_channels=in_channels,
         random_flip=False,
         classes=classes,
+        filepaths=all_files,
         shard=MPI.COMM_WORLD.Get_rank(),
         num_shards=MPI.COMM_WORLD.Get_size()
     )
@@ -116,14 +107,11 @@ def load_source_data_for_domain_translation(
     yield from loader
 
 
-def list_image_files(data_dir, retain_zero_class=False):
+def list_image_files(data_dir):
     """List images files in the directory (not recursively)."""
-    files = sorted([file.zfill(20) for file in bf.listdir(data_dir)])
+    files = sorted(bf.listdir(data_dir))
     results = []
     for entry in files:
-        entry = entry.lstrip('0')
-        if retain_zero_class and entry.startswith("_"):
-            entry = f"0{entry}"
         full_path = bf.join(data_dir, entry)
         ext = entry.split(".")[-1]
         if "." in entry and ext.lower() in ["jpg", "jpeg", "png", "gif"]:
@@ -153,7 +141,8 @@ class ImageDataset(Dataset):
             num_shards=1,
             random_crop=False,
             random_flip=True,
-            in_channels=3
+            in_channels=3,
+            filepaths=None
     ):
         super().__init__()
         self.resolution = resolution
@@ -162,6 +151,7 @@ class ImageDataset(Dataset):
         self.random_crop = random_crop
         self.random_flip = random_flip
         self.in_channels = in_channels
+        self.filepaths = filepaths
 
     def __len__(self):
         return len(self.local_images)
@@ -191,6 +181,8 @@ class ImageDataset(Dataset):
         out_dict = dict()
         if self.local_classes is not None:
             out_dict["y"] = np.array(self.local_classes[idx], dtype=np.int64)
+        if self.filepaths is not None:
+            out_dict["filepath"] = self.filepaths[idx]
         return np.transpose(arr, [2, 0, 1]), out_dict
 
 
@@ -245,12 +237,13 @@ def get_image_filenames_for_label(label):
     :param label: an integer in 0-1000
     """
     # First, retrieve the synset word corresponding to the given label
-    synsets_filepath = "./../evaluations/synset_words.txt"
+    base_dir = os.getcwd()
+    synsets_filepath = os.path.join(base_dir, "evaluations", "synset_words.txt")
     synsets = [line.split()[0] for line in open(synsets_filepath).readlines()]
     synset_word_for_label = synsets[label]
 
     # Next, build the synset to ID mapping
-    synset_mapping_filepath = "./../evaluations/map_clsloc.txt"
+    synset_mapping_filepath = os.path.join(base_dir, "evaluations", "map_clsloc.txt")
     synset_to_id = dict()
     with open(synset_mapping_filepath) as file:
         for line in file:
@@ -259,7 +252,7 @@ def get_image_filenames_for_label(label):
     true_label = synset_to_id[synset_word_for_label]
 
     # Finally, return image files corresponding to the true label
-    validation_ground_truth_filepath = "./../evaluations/ILSVRC2012_validation_ground_truth.txt"
+    validation_ground_truth_filepath = os.path.join(base_dir, "evaluations", "ILSVRC2012_validation_ground_truth.txt")
     source_data_labels = [int(line.strip()) for line in open(validation_ground_truth_filepath).readlines()]
     image_indexes = [i + 1 for i in range(len(source_data_labels)) if true_label == source_data_labels[i]]
     output = [f"ILSVRC2012_val_{str(i).zfill(8)}.JPEG" for i in image_indexes]

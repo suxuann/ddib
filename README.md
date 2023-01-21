@@ -1,11 +1,11 @@
-# Dual Diffusion Implicit Bridges
+# Dual Diffusion Implicit Bridges (ICLR 2023)
 
 [**Dual Diffusion Implicit Bridges for Image-to-Image Translation**](https://openreview.net/forum?id=5HLoTvVGDe)<br/>
 [Xuan Su](https://github.com/suxuann/ddib),
 [Jiaming Song](https://tsong.me/),
 [Chenlin Meng](https://cs.stanford.edu/~chenlin/),
 [Stefano Ermon](https://cs.stanford.edu/~ermon/)<br/>
-_[ICLR '23 Submission](https://openreview.net/forum?id=5HLoTvVGDe) |
+_[ICLR '23](https://openreview.net/forum?id=5HLoTvVGDe) |
 [GitHub](https://github.com/suxuann/ddib) | [arXiv](https://arxiv.org/abs/2203.08382)
 | [Project Page](https://github.com/suxuann/ddib#)_
 

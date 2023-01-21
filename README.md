@@ -32,7 +32,11 @@ conda install -c conda-forge mpi4py openmpi
 
 We release pretrained checkpoints for the 2D synthetic models in the paper.
 
-Here is the download link for the model
+### Installation
+**Downloading via script**: In your repository, run `python download.py --exp synthetic` to download the pretrained synthetic models. The
+script will create a directory `models/synthetic` and automatically download the checkpoints to the directory.
+
+**Downloading manually**: As an alternative, you can also download the checkpoint manually. Here is the download link for the model
 checkpoints: [Synthetic Models](https://drive.google.com/drive/folders/1YRP6nt96OJUOzEYY6N_Qh5xb3wEVFSjg?usp=sharing)
 
 **Indexes**. We use indexes 0-5 to refer to the 6 synthetic types,
@@ -40,11 +44,6 @@ in: [Moons, Checkerboards, Concentric Rings, Concentric Squares, Parallel Rings,
 
 **How are the datasets generated?** The key file to look at is: `guided_diffusion/synthetic_datasets.py`. We implement
 the data generation and sampling processes for various 2D modalities.
-
-### Installation
-
-In your repository, run `python download.py --exp synthetic` to download the pretrained synthetic models. The
-script will create a directory `models/synthetic` and download the checkpoints there.
 
 After running the download script, we can run the cycle consistency, synthetic translation and sampling experiments
 below.

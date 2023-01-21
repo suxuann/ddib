@@ -11,9 +11,9 @@ _[ICLR '23](https://openreview.net/forum?id=5HLoTvVGDe) |
 
 <img src="assets/figure_1.png" height="240" />
 
-This repository is heavily based on the repositories from
-OpenAI: [openai/guided-diffusion](https://github.com/openai/guided-diffusion)
-and [openai/improved-diffusion](https://github.com/openai/improved-diffusion).
+
+## Overview
+Common image-to-image translation methods rely on joint training over data from both source and target domains. This prevents the training process from preserving privacy of domain data (e.g., in a federated setting), and often means that a new model has to be trained for a new pair of domains. We present Dual Diffusion Implicit Bridges (DDIBs), an image translation method based on diffusion models, that circumvents training on domain pairs. Image translation with DDIBs relies on two diffusion models trained independently on each domain, and is a two-step process: DDIBs first obtain latent encodings for source images with the source diffusion model, and then decode such encodings using the target model to construct target images. Both steps are defined via an ODE, and thus the process is cycle consistent only up to discretization errors of the ODE solvers. Theoretically, we interpret DDIBs as concatenation of source to latent, and latent to target Schrödinger Bridges, a form of entropy-regularized optimal transport, to explain the efficacy of the method. Experimentally, we apply DDIBs on both synthetic and high-resolution image datasets, to demonstrate their utility in a wide variety of translation tasks as well as their connections to existing optimal transport methods.
 
 ## Installation
 
@@ -119,6 +119,21 @@ strengths.
 
 We can prepend the Python command with `mpiexec -n N` to run it over multiple GPUs. For details, refer
 to [guided-diffusion](https://github.com/openai/guided-diffusion).
+
+
+
+## References and Acknowledgements
+```
+@article{su2022dual,
+  title={Dual Diffusion Implicit Bridges for Image-to-Image Translation},
+  author={Su, Xuan and Song, Jiaming and Meng, Chenlin and Ermon, Stefano},
+  journal={arXiv preprint arXiv:2203.08382},
+  year={2022}
+}
+```
+This implementation is based on / inspired by:
+OpenAI: [openai/guided-diffusion](https://github.com/openai/guided-diffusion)
+and [openai/improved-diffusion](https://github.com/openai/improved-diffusion).
 
 ## To-do List
 

@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>DDIB Project Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <meta property="og:image" content="assets/teaser.png"/>
+    <meta property="og:title" content="Dual Diffusion Implicit Bridges for Image-to-Image Translation" />
+    <link media="all" href="glab.css" type="text/css" rel="StyleSheet">
+    <style type="text/css" media="all">
+      IMG {
+      PADDING-RIGHT: 0px;
+      PADDING-LEFT: 0px;
+      FLOAT: right;
+      PADDING-BOTTOM: 0px;
+      PADDING-TOP: 0px
+      }
+      #primarycontent {
+      MARGIN-LEFT: auto; ; WIDTH: expression(document.body.clientWidth >
+      800? "800px": "auto" ); MARGIN-RIGHT: auto; TEXT-ALIGN: left; max-width:
+      800px }
+      BODY {
+      TEXT-ALIGN: center
+      }
+    </style>
+  </head>
+  <body>
+    <div id="primarycontent">
+      <center>
+        <h1>Dual Diffusion Implicit Bridges for Image-to-Image Translation</h1>
+      </center>
+      <center>
+        <h2>
+          <a href="https://github.com/suxuann/ddib">Xuan Su</a>&nbsp;&nbsp;&nbsp;
+          <a href="http://tsong.me/">Jiaming Song</a>&nbsp;&nbsp;&nbsp;
+          <a href="https://cs.stanford.edu/~chenlin/">Chenlin Meng</a>&nbsp;&nbsp;&nbsp;
+          <a href="https://cs.stanford.edu/~ermon/">Stefano Ermon</a>&nbsp;&nbsp;&nbsp;
+        </h2>
+      </center>
+      <center>
+        <h2>
+          Stanford University
+        </h2>
+      </center>
+      <center>
+        <h2>
+          In ICLR 2023
+        </h2>
+      </center>
+      <center>
+        <h2><strong><a href="https://openreview.net/forum?id=5HLoTvVGDe">Paper</a> | <a href="https://github.com/suxuann/ddib">GitHub</a> | <a href="https://colab.research.google.com/drive/1-AC-z3DKSpgtCwbt7gASSGNtQOFM0BT6?usp=sharing">Colab</a></strong> </h2>
+      </center>
+      <br>
+      <div style="font-size:14px">
+        <p align="justify">
+          DDIBs are an image-to-image translation method, based on probability flow ordinary differential equations (PF ODEs) of generative diffusion models. DDIBs enable independent model training, guarantee exact cycle-consistent translation, and produce impressive results on high-resolution image datasets.
+        </p>
+      </div>
+      <center style="margin-top:1cm;">
+        <a href="assets/teaser.png">
+        <img src="assets/teaser.png" width="800">
+        </a>
+      </center>
+      <p></p>
+      <br><br>
+      <p style="margin-top:7cm;">
+      <h2>Abstract</h2>
+      <div style="font-size:14px">
+        <p align="justify">
+          Common image-to-image translation methods rely on joint training over data from both source and target domains. The training process requires concurrent access to both datasets, which hinders data separation and privacy protection; and existing models cannot be easily adapted to translation of new domain pairs. We present Dual Diffusion Implicit Bridges (DDIBs), an image translation method based on diffusion models, that circumvents training on domain pairs. Image translation with DDIBs relies on two diffusion models trained independently on each domain, and is a two-step process: DDIBs first obtain latent encodings for source images with the source diffusion model, and then decode such encodings using the target model to construct target images. Both steps are defined via ordinary differential equations (ODEs), thus the process is cycle consistent only up to discretization errors of the ODE solvers. Theoretically, we interpret DDIBs as concatenation of source to latent, and latent to target Schr&ouml;dinger Bridges, a form of entropy-regularized optimal transport, to explain the efficacy of the method. Experimentally, we apply DDIBs on synthetic and high-resolution image datasets, to demonstrate their utility in a wide variety of translation tasks and their inherent optimal transport properties.
+        </p>
+      </div>
+      <a href="https://arxiv.org/abs/2203.08382">
+      <img style="float: left; padding: 10px; PADDING-RIGHT: 30px;" alt="paper thumbnail" src="assets/paper_thumbnail.png" width=170>
+      </a>
+      <br>
+      <h2>Paper</h2>
+      <p><a href="https://arxiv.org/abs/2203.08382">arXiv 2203.08382</a>,  2022. </p>
+      <h2>Citation</h2>
+      <p>Xuan Su, Jiaming Song, Chenlin Meng and Stefano Ermon. "Dual Diffusion Implicit Bridges for Image-to-Image Translation". In International Conference on Learning Representations (ICLR) 2023.
+        <br>
+        <a href="bibtek.txt">Bibtex</a>
+      </p>
+      <br><br><br>
+      <h2 align='center'>Problems with GANs and normalizing flows</h2>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td valign="middle">
+            <p font-size:14px>
+              Common image translation methods are based on generative adversarial networks (GANs) and normalizing flows. They learn to translate images by optimizing a loss that requires concurrent access to both the source and target datasets. What are potential problems of this training approach?
+            <li><strong>Adaptability</strong>: the resulting models cannot be easily applied to other source-target pairs.</li>
+            <li><strong>Data Privacy</strong>: the training process requires simultaneous access to both datasets, which makes it impossible to separate the datasets and protect data privacy. See illustration below: the training cycle-consistency loss is dependent on both domains <i>X & Y</i>.</li>
+            </p>
+          </td>
+        <tr>
+          <td valign="middle"><a href="assets/cyclegan.png"><img src="assets/cyclegan.png"  width=800> </a></td>
+        </tr>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <h2 align='center'>DDIBs flow through the PF ODEs</h2>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td valign="middle">
+            <p font-size:14px>
+              DDIBs solve both problems! DDIBs rely on diffusion models trained independently on the two domains.
+            <li><strong>Adaptability</strong>: the individual diffusion models can be saved for future use for the same domain, when it appears as the source or target domain again in a new domain pair.</li>
+            <li><strong>Data Privacy</strong>: since the models are trained independently, we no longer require presence of both datasets in training time.</li>
+            </p>
+            <p font-size:14px>
+              In detail, DDIBs rely on so-called <i>probability flow ordinary differential equations</i> (PF ODEs), that are a specific, deterministic way of navigating the diffusion process. While there are many paths to generate samples from the latent space, defined via <i>stochastic differential equations</i>; among them, there is one, unique ODE that shares the same marginal densities across time as the SDEs. In graphical terms, the ODEs are the red trajectories below.
+            </p>
+            <p font-size:14px>
+              The DDIBs translation process is equivalent to flowing from the source space, to the latent space, and then to the target, via the red lines / bridges.
+            </p>
+          </td>
+        <tr>
+          <td valign="middle"><a href="assets/diffusion.png"><img src="assets/diffusion.png"  width=800> </a></td>
+        </tr>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <h2 align='center'>DDIBs guarantee exact cycle consistency</h2>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td valign="middle">
+            <p font-size:14px>
+              A desirable property of image translation methods is the <strong>cycle consistency</strong> property: translating an image from the source to the target domain, and then back to the source domain, recovers the original image.
+            </p>
+            <p font-size:14px>
+              For DDIBs, if you take a closer look at the translation processes (the red lines) above, you'll find that -- perhaps unsurprisingly -- they <i>guarantee</i> cycle consistency, by virtue of being ODEs! Indeed, if we were to travel through the red lines, from left to right and then right to left, across the three spaces, we are certain to arrive at the original positions.
+            </p>
+            <p font-size:14px>
+              Exact cycle consistency of DDIBs is empirically validated by 2D synthetic translation experiments, shown in the following figures.
+            </p>
+          </td>
+        <tr>
+          <td valign="middle">
+            <a href="assets/cycle_12.png"><img src="assets/cycle_12.png"  width=400> </a>
+            <a href="assets/cycle_35.png"><img src="assets/cycle_35.png"  width=400> </a>
+          </td>
+        </tr>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <h2 align='center'>DDIBs are intrinsically optimal transport bridges</h2>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td valign="middle">
+            <p font-size:14px>
+              How to interpret the DDIBs translation process? We find that it is closely related to <strong>optimal transport</strong>: seeking the cost-minimizing method to transport masses from one distribution to another. In particular, DDIBs are two concatenated <strong>Schr&ouml;dinger Bridges</strong>. These are a special type of optimal transport with entropy regularization.
+            </p>
+            <p font-size:14px>
+              To build the intuition, let's inspect the following visualizations, with the leftmost column being the source images and the rightmost being the targets. Clearly, DDIBs minimize pixel-wise distances between the image pairs, morphing the edges, hands, and shapes into tree branches and suitable parts of the dog body, that the diffusion models consider appropriate, and are closest in distances to the original shapes.
+            </p>
+          </td>
+        <tr>
+          <td valign="middle">
+            <a href="assets/interpolation_1.png"><img src="assets/interpolation_1.png"  width=800> </a><br />
+            <a href="assets/interpolation_2.png"><img src="assets/interpolation_2.png"  width=800> </a>
+          </td>
+        </tr>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <h2 align='center'>DDIBs generate impressive image translation results!</h2>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td valign="middle">
+            <p font-size:14px>
+              Below, we showcase various image translation pairs from the ImageNet validation set. Enjoy!
+            </p>
+          </td>
+        <tr>
+          <td valign="middle"><a href="assets/grid.png"><img src="assets/grid.png"  width=800> </a></td>
+        </tr>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <br><br>
+      <h2>Related Work</h2>
+      <ul id='relatedwork'>
+        <li font-size: 15px>
+          Chenlin Meng, Yutong He, Yang Song, Jiaming Song, Jiajun Wu, Jun-Yan Zhu, Stefano Ermon <a href="https://arxiv.org/abs/2108.01073"><strong>"SDEdit: Guided Image Synthesis and Editing with Stochastic Differential Equations"</strong></a>, 
+          ICLR 2022.
+        </li>
+        <li font-size: 15px>
+          Yang Song, Jascha Sohl-Dickstein, Diederik P. Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole <a href="https://arxiv.org/abs/2011.13456"><strong>"Score-Based Generative Modeling through Stochastic Differential Equations"</strong></a>, ICLR 2021.
+        </li>
+        <li font-size: 15px>
+          Jiaming Song, Chenlin Meng, and Stefano Ermon <a href="https://arxiv.org/abs/2010.02502"><strong>"Denoising Diffusion Implicit Models"</strong></a>, ICLR 2021.
+        </li>
+        <li font-size: 15px>
+          Jonathan Ho, Ajay Jain, and Pieter Abbeel <a href="https://arxiv.org/abs/2006.11239"><strong>"Denoising Diffusion Probabilistic Models"</strong></a>, NeurIPS 2020.
+        </li>
+      </ul>
+      <br><br><br>
+    </div>
+  </body>
+</html>

@@ -8,6 +8,7 @@ import gdown
 
 class Constant:
     SyntheticURL = "https://drive.google.com/drive/folders/1YRP6nt96OJUOzEYY6N_Qh5xb3wEVFSjg"
+    ImageNetDatasetURL = "https://drive.google.com/drive/folders/17vIa5bMNYql9IbSCsbQ8ECGpYuLhg6KF"
     ImageNetClassifier = "https://openaipublic.blob.core.windows.net/diffusion/jul-2021/256x256_classifier.pt"
     ImageNetDiffusion = "https://openaipublic.blob.core.windows.net/diffusion/jul-2021/256x256_diffusion.pt"
 
@@ -15,7 +16,8 @@ class Constant:
 class Experiment:
     Synthetic = "synthetic"
     ImageNet = "imagenet"
-    All = [Synthetic, ImageNet]
+    ImageNetDataset = "imagenet_dataset"
+    All = [Synthetic, ImageNet, ImageNetDataset]
 
 
 def download_synthetic_checkpoints():
@@ -39,6 +41,14 @@ def download_imagenet_checkpoints():
         urllib.request.urlretrieve(file, filename=filepath)
 
 
+def download_imagenet_dataset():
+    """Downloads a subset of ImageNet validation set."""
+    path = "./models/imagenet_dataset"
+    Path(path).mkdir(parents=True, exist_ok=True)
+    gdown.download_folder(Constant.ImageNetDatasetURL, output=path,
+                          quiet=False, use_cookies=False)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -57,6 +67,10 @@ def main():
         download_synthetic_checkpoints()
     elif exp == Experiment.ImageNet:
         download_imagenet_checkpoints()
+    elif exp == Experiment.ImageNetDataset:
+        download_imagenet_dataset()
+
+
 
 
 if __name__ == "__main__":

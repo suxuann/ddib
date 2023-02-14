@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import torch.distributed as dist
 
-from common import read_model_and_diffusion, get_code_and_dataset_folders
+from common import read_model_and_diffusion
 from guided_diffusion import dist_util, logger
 from guided_diffusion.script_util import model_and_diffusion_defaults_2d, add_dict_to_argparser
 from guided_diffusion.synthetic_datasets import Synthetic2DType, scatter, heatmap
@@ -22,7 +22,7 @@ def main():
     logger.configure()
     logger.log("starting to sample synthetic data.")
 
-    code_folder, data_folder = get_code_and_dataset_folders()
+    code_folder = os.getcwd()
     image_folder = os.path.join(code_folder, f"experiments/images")
     pathlib.Path(image_folder).mkdir(parents=True, exist_ok=True)
 

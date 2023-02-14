@@ -40,7 +40,7 @@ def copy_imagenet_dataset(val_dir, classes):
         filenames = get_image_filenames_for_label(source_label)
         for i, filename in enumerate(filenames):
             path = os.path.join(val_dir, filename)
-            copy_path = os.path.join(base_dir, f"{source_label}_{i + 1}.JPG")
+            copy_path = os.path.join(base_dir, f"{source_label}_{i + 1}.PNG")
             shutil.copyfile(path, copy_path)
 
 
@@ -96,7 +96,8 @@ def main():
     logger.log("running image translation...")
     data = load_source_data_for_domain_translation(
         batch_size=args.batch_size,
-        image_size=args.image_size
+        image_size=args.image_size,
+        classes=source
     )
 
     for i, (batch, extra) in enumerate(data):

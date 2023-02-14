@@ -16,17 +16,6 @@ from guided_diffusion.script_util import (
     args_to_dict,
 )
 
-# TODO Data folder is not needed for the synthetic experiments.
-DATA_FOLDER = "ddib_datasets"
-
-
-def get_code_and_dataset_folders():
-    """
-    This is a utility function for the experiments.
-    Returns paths to the folders for the code repository and the data.
-    """
-    return os.getcwd(), DATA_FOLDER
-
 
 def get_latest_model_path_in_directory(directory):
     """Returns the path to the latest model in the given directory."""

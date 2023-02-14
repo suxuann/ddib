@@ -77,7 +77,8 @@ def load_source_data_for_domain_translation(
         batch_size,
         image_size,
         data_dir="./experiments/imagenet",
-        in_channels=3
+        in_channels=3,
+        class_cond=True
 ):
     """
     This function is new in DDIBs: loads the source dataset for translation.
@@ -86,13 +87,14 @@ def load_source_data_for_domain_translation(
 
     :param batch_size: the batch size of each returned pair.
     :param image_size: the size to which images are resized.
-    :param label: include a "y" key in returned dicts for class label.
     """
     if not data_dir:
         raise ValueError("unspecified data directory")
     all_files = [f for f in list_image_files(data_dir) if "translated" not in f]
     # Classes are the first part of the filename, before an underscore: e.g. "291_1.png"
-    classes = [int(bf.basename(path).split("_")[0]) for path in all_files]
+    classes = None
+    if class_cond:
+        classes = [int(bf.basename(path).split("_")[0]) for path in all_files]
     dataset = ImageDataset(
         image_size,
         all_files,
